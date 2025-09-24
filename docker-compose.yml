@@ -29,16 +29,16 @@ services:
 
 secrets:
   ssl-cert:
-    file: ../secrets/self-signed.crt
+    file: secrets/self-signed.crt
   ssl-key:
-    file: ../secrets/self-signed.key
+    file: secrets/self-signed.key
   db-user:
-    file: ../secrets/db-user
+    file: secrets/db-user
   db-password:
-    file: ../secrets/db-password
+    file: secrets/db-password
   wp-admin-user:
-    file: ../secrets/wp-admin-user
+    file: secrets/wp-admin-user
   wp-admin-password:
-    file: ../secrets/wp-admin-password
+    file: secrets/wp-admin-password
   wp-user-password:
-    file: ../secrets/wp-user-password
+    file: secrets/wp-user-password
