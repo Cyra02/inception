@@ -3,12 +3,14 @@ services:
     build: requirements/nginx/.
     container_name: nginx
     ports:
-      - "8080:80"
+      - "443:443"
     volumes:
       - ./web:/var/www/html
     secrets:
       - ssl-cert
       - ssl-key
+    depends_on:
+      - wordpress
   wordpress:
     build: requirements/wordpress/.
     container_name: wp-php
@@ -22,9 +24,15 @@ services:
       - wp-admin-user
       - wp-admin-password
       - wp-user-password
+    depends_on:
+      - mariadb
   mariadb:
     build: requirements/mariadb/.
     container_name: mariadb
+    expose:
+      - 3306
+    volumes:
+      - ./database:/var/lib/mysql
 
 
 secrets:
