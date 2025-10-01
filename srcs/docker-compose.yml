@@ -5,7 +5,7 @@ services:
     ports:
       - "443:443"
     volumes:
-      - ./web:/var/www/html
+      - /home/ciestrad/data/web:/var/www/html
     secrets:
       - ssl-cert
       - ssl-key
@@ -15,7 +15,7 @@ services:
     build: requirements/wordpress/.
     container_name: wp-php
     volumes:
-      - ./web:/var/www/html
+      - /home/ciestrad/data/web:/var/www/html
     expose:
       - 9000
     secrets:
@@ -32,21 +32,21 @@ services:
     expose:
       - 3306
     volumes:
-      - ./database:/var/lib/mysql
+      - /home/ciestrad/data/database:/var/lib/mysql
 
 
 secrets:
   ssl-cert:
-    file: secrets/self-signed.crt
+    file: ../secrets/self-signed.crt
   ssl-key:
-    file: secrets/self-signed.key
+    file: ../secrets/self-signed.key
   db-user:
-    file: secrets/db-user
+    file: ../secrets/db-user
   db-password:
-    file: secrets/db-password
+    file: ../secrets/db-password
   wp-admin-user:
-    file: secrets/wp-admin-user
+    file: ../secrets/wp-admin-user
   wp-admin-password:
-    file: secrets/wp-admin-password
+    file: ../secrets/wp-admin-password
   wp-user-password:
-    file: secrets/wp-user-password
+    file: ../secrets/wp-user-password

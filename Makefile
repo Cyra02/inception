@@ -1,4 +1,4 @@
-DOCKER_COMPOSE	= docker-compose.yml
+DOCKER_COMPOSE	= srcs/docker-compose.yml
 
 SECRETS_DIR	= secrets/
 
@@ -6,7 +6,7 @@ SSL_CERT	= $(SECRETS_DIR)self-signed.crt
 
 DATA_DIR	= /home/ciestrad/data
 DATABASE	= $(DATA_DIR)/database
-SITE		= $(DATA_DIR)/site
+SITE		= $(DATA_DIR)/web
 
 SECRETS_LIST_PRE = db-user db-password wp-admin-user wp-admin-password wp-user-password
 SECRETS_LIST = $(addprefix $(SECRETS_DIR), $(SECRETS_LIST_PRE))
@@ -18,7 +18,7 @@ $(SECRETS_LIST):
 
 
 $(SSL_CERT):
-	sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $(SECRETS_DIR)self-signed.key -out $(SSL_CERT) -subj "/C=ES/ST=Bizkaia/L=Urduliz/O=42Urduliz/CN=localhost"
+	sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $(SECRETS_DIR)self-signed.key -out $(SSL_CERT) -subj "/C=ES/ST=Bizkaia/L=Urduliz/O=42Urduliz/CN=ciestrad.42.fr"
 
 build: $(SSL_CERT) $(SECRETS_LIST) $(DATABASE) $(SITE)
 	sudo docker compose -f $(DOCKER_COMPOSE) build
