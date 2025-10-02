@@ -7,20 +7,30 @@ SSL_CERT	= $(SECRETS_DIR)self-signed.crt
 DATA_DIR	= /home/ciestrad/data
 DATABASE	= $(DATA_DIR)/database
 SITE		= $(DATA_DIR)/web
+ENV			= srcs/.env
 
 SECRETS_LIST_PRE = db-user db-password wp-admin-user wp-admin-password wp-user-password
 SECRETS_LIST = $(addprefix $(SECRETS_DIR), $(SECRETS_LIST_PRE))
 
 all: build
 
+
+$(SECRETS_DIR):
+	mkdir -p $(SECRETS_DIR)
+
+$(ENV):
+	touch $(ENV)
+	echo 'DOMAIN_NAME: "ciestrad.42.fr"' >> $(ENV)
+	echo 'WP_USERNAME: "user"' >> $(ENV) 
+
 $(SECRETS_LIST):
 	touch $(SECRETS_LIST)
 
 
-$(SSL_CERT):
+$(SSL_CERT): $(SECRETS_DIR)
 	sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $(SECRETS_DIR)self-signed.key -out $(SSL_CERT) -subj "/C=ES/ST=Bizkaia/L=Urduliz/O=42Urduliz/CN=ciestrad.42.fr"
 
-build: $(SSL_CERT) $(SECRETS_LIST) $(DATABASE) $(SITE)
+build: $(ENV) $(SSL_CERT) $(SECRETS_LIST) $(DATABASE) $(SITE)
 	sudo docker compose -f $(DOCKER_COMPOSE) build
 
 $(DATABASE): $(DATA_DIR)
@@ -41,5 +51,8 @@ down:
 clean: down
 	sudo docker volume prune
 	sudo rm -rf $(DATA_DIR)/*
+
+fclean: clean
+	rm -rf $(SECRETS_DIR) $(ENV)
 
 re: clean all
