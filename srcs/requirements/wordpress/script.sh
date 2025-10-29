@@ -1,11 +1,10 @@
 #!/bin/sh
 
 username=$WP_USERNAME
-userpwd=$(cut -d '\n' -f2 /run/secrets/wp-user-password)
-adminuser=$(cut -d '\n' -f2 /run/secrets/wp-admin-user)
-adminpwd=$(cut -d '\n' -f2 /run/secrets/wp-admin-password)
-dbname=$(cut -d '\n' -f2 /run/secrets/db-user)
-dbpwd=$(cut -d '\n' -f2 /run/secrets/db-password)
+userpwd=$(cut -d ' ' -f2 /run/secrets/wp-user-password)
+adminuser=$(cut -d ' ' -f2 /run/secrets/wp-admin-user)
+adminpwd=$(cut -d ' ' -f2 /run/secrets/wp-admin-password)
+dbname=$(cut -d ' ' -f2 /run/secrets/db-user)
 
 if ! [ -e /var/www/html/wp-config.php ]; then
     cd /var/www/html
@@ -16,12 +15,12 @@ if ! [ -e /var/www/html/wp-config.php ]; then
         mv wp-cli.phar /usr/local/bin/wp
     fi
     wp core download --allow-root
-    wp config create --dbname=wordpress --dbuser=$dbname --dbpass=$dbpwd --dbhost=mariadb --allow-root
+    wp config create --dbname=wordpress --dbuser=$dbname --dbhost=mariadb --allow-root
     wp core install --url=$DOMAIN_NAME --title=inception --admin_user=$adminuser --admin_password=$adminpwd --admin_email=$adminuser@example.com --allow-root
-    wp user create $username $username@example.com --role=author --user_pass=$userpwd
-    wp theme install twentysixteen --activate
+    wp user create $username $username@example.com --role=author --user_pass=$userpwd --allow-root
+    wp theme install twentysixteen --activate --allow-root
 else
     echo "Wordpress already installed"
 fi
 
-exec "php-fpm8.4" "-F"
+exec "php-fpm8.2" "-F"

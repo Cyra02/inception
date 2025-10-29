@@ -2,6 +2,8 @@ services:
   nginx:
     build: requirements/nginx/.
     container_name: nginx
+    env_file:
+      - .env
     ports:
       - "443:443"
     volumes:
@@ -13,6 +15,8 @@ services:
       - wordpress
   wordpress:
     build: requirements/wordpress/.
+    env_file:
+      - .env
     container_name: wp-php
     volumes:
       - /home/ciestrad/data/web:/var/www/html
